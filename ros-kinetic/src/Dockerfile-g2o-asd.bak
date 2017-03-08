@@ -1,0 +1,27 @@
+FROM ros:kinetic-desktop-full
+#install g2o from source
+COPY g2o/ /g2o/
+
+RUN \
+    cd /g2o && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make -j8 
+
+ARG name=asd-g2o
+ARG desc=ict:asd-g2o
+
+
+RUN apt-get update && \
+    apt-get -y install --no-install-recommends \
+    apt-utils \
+    checkinstall && \
+    rm -rf /var/lib/apt/lists/*
+
+
+RUN cd /g2o/build && \
+    echo $desc":"$name >description-pak && \
+    checkinstall -Dy --install=no --nodoc --pkgname=$name --backup=no make -i install
+
+CMD ["/bin/bash"]

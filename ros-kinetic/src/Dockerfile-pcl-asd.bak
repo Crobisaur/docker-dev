@@ -1,0 +1,18 @@
+FROM ros:kinetic-desktop-full
+#install pcl from source
+COPY pcl/ /pcl/
+RUN \
+    cd /pcl && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    cmake -DCMAKE_BUILD_TYPE=Release .. && \
+    make -j8 && \
+    make -j8 install
+
+ARG name=asd-pcl-1.8
+RUN apt-get update && \
+    apt-get -y install checkinstall && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN checkinstall -Dy --install=no --nodoc --pkgname=$name --backup=no

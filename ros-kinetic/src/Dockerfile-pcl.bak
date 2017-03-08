@@ -1,0 +1,11 @@
+FROM ros:kinetic-desktop-full
+#install pcl from source
+COPY pcl/ /pcl/
+RUN \
+    cd /pcl && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    cmake -DCMAKE_BUILD_TYPE=Release .. && \
+    make -j8 && \
+    make -j8 install
